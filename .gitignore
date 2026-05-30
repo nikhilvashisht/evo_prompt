@@ -11,8 +11,6 @@ __pycache__/
 # Logs
 logs/
 
-# Scripts
-scripts/
 
 # Project launcher
 run.py
