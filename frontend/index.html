@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>evo_prompt // Prompt Evolutionary Optimizer</title>
+  <!-- Modern Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Background Glowing Orbs for Ambient Backlight -->
+  <div class="ambient-glow orb-1"></div>
+  <div class="ambient-glow orb-2"></div>
+  <div class="ambient-glow orb-3"></div>
+
+  <!-- Main Grid App Container -->
+  <div class="app-container">
+    
+    <!-- Top Glassmorphic Navigation Bar -->
+    <header class="app-header">
+      <div class="logo">
+        <span class="logo-accent">evo_</span>prompt
+        <span class="version-badge">v1.0.0</span>
+      </div>
+      <nav class="nav-links">
+        <button class="nav-btn active" data-tab="console-view">Trace Console</button>
+        <button class="nav-btn" data-tab="registry-view">Prompt Registry</button>
+        <button class="nav-btn" data-tab="ingest-view">Ingestion Hub</button>
+      </nav>
+      <div class="server-status">
+        <span class="status-indicator online"></span>
+        <span class="status-text">Server Online</span>
+      </div>
+    </header>
+
+    <!-- MAIN BODY TABS -->
+    <main class="app-main">
+      
+      <!-- TAB 1: TRACE CONSOLE (Split View) -->
+      <section id="console-view" class="tab-content active">
+        <div class="console-layout">
+          
+          <!-- LEFT PANEL: TRACES LIST -->
+          <div class="traces-panel glass-card">
+            <div class="panel-header">
+              <h3>Execution Traces</h3>
+              <div class="filter-bar">
+                <button class="filter-btn active" data-filter="all">All Traces</button>
+                <button class="filter-btn" data-filter="misses">Flagged Misses</button>
+              </div>
+            </div>
+            <div class="traces-list-container" id="traces-list">
+              <!-- Dynamically populated traces lists -->
+              <div class="list-placeholder">Loading execution traces...</div>
+            </div>
+          </div>
+
+          <!-- RIGHT PANEL: INTERACTIVE TRACE PLAYER -->
+          <div class="player-panel glass-card" id="trace-player">
+            <!-- Dynamically rendered timeline details -->
+            <div class="player-placeholder">
+              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="12" cy="12" r="9"/>
+                <path d="M12 8v4l3 3"/>
+              </svg>
+              <h4>Select a trace from the left panel to inspect execution timeline and toggle misses.</h4>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- TAB 2: PROMPT REGISTRY -->
+      <section id="registry-view" class="tab-content">
+        <div class="registry-layout">
+          
+          <!-- LEFT PANEL: PROMPT VERSIONS LIST -->
+          <div class="prompts-list-panel glass-card">
+            <div class="panel-header">
+              <h3>Prompt Versions</h3>
+              <button class="action-btn" id="new-prompt-trigger">New Prompt</button>
+            </div>
+            <div class="prompts-list" id="prompts-registry-list">
+              <!-- Dynamically loaded prompt versions -->
+            </div>
+          </div>
+
+          <!-- RIGHT PANEL: PROMPT VERSION DETAIL & COMPARISON -->
+          <div class="prompt-detail-panel glass-card" id="prompt-detail-view">
+            <div class="player-placeholder">
+              <h4>Select a prompt version to view details, active parameters, or compare changes.</h4>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- TAB 3: INGESTION HUB -->
+      <section id="ingest-view" class="tab-content">
+        <div class="ingest-layout">
+          
+          <div class="ingest-instructions glass-card">
+            <h3>Log Ingestion Hub</h3>
+            <p>Evo-prompt provides two ways to trace, audit, and collect LLM traces:</p>
+            
+            <div class="ingest-methods">
+              <div class="method-card">
+                <div class="method-icon">🔌</div>
+                <h4>SDK Interceptors (Recommended)</h4>
+                <p>Intercept requests at the application layer with our simple client wrappers. Instantly records high-fidelity trace objects directly to the DB.</p>
+                <pre><code class="language-python">from openai import AsyncOpenAI
+from backend.app.interceptors import OpenAIInterceptor
+
+client = AsyncOpenAI()
+# Wraps original client asynchronously
+OpenAIInterceptor(client)
+
+# That's it! All client completions are automatically logged
+response = await client.chat.completions.create(...)</code></pre>
+              </div>
+
+              <div class="method-card">
+                <div class="method-icon">📁</div>
+                <h4>Upload Legacy Logs</h4>
+                <p>Drag and drop production log dumps in either plain-text format or structured JSONL to parse out the underlying interactions.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- FILE UPLOAD DROPZONE -->
+          <div class="upload-container glass-card" id="drop-zone">
+            <div class="upload-icon">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M12 17V3m0 0L8 7m4-4l4 4"/>
+                <path d="M20 17v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2"/>
+              </svg>
+            </div>
+            <h4>Drag & Drop Log Files Here</h4>
+            <p class="upload-sub">Accepts <code>.log</code>, <code>.txt</code>, and <code>.jsonl</code> log outputs</p>
+            <input type="file" id="log-file-input" style="display: none;" accept=".log,.txt,.jsonl">
+            <button class="action-btn" onclick="document.getElementById('log-file-input').click()">Browse Files</button>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <!-- DIALOG: NEW PROMPT VERSION -->
+    <dialog class="glass-dialog" id="new-prompt-dialog">
+      <div class="dialog-content">
+        <h3>Register New System Prompt Version</h3>
+        <form method="dialog" id="new-prompt-form">
+          <div class="form-group">
+            <label for="prompt-parent-id">Parent Version ID (Optional)</label>
+            <input type="text" id="prompt-parent-id" placeholder="e.g. seed-v1">
+          </div>
+          <div class="form-group">
+            <label for="prompt-text">Prompt Text</label>
+            <textarea id="prompt-text-area" required rows="10" placeholder="Paste system prompt instructions..."></textarea>
+          </div>
+          <div class="form-group">
+            <label for="prompt-desc">Description / Version Notes</label>
+            <input type="text" id="prompt-desc" placeholder="e.g. Added details on math formatting">
+          </div>
+          <div class="dialog-actions">
+            <button type="button" class="btn-cancel" onclick="document.getElementById('new-prompt-dialog').close()">Cancel</button>
+            <button type="submit" class="action-btn">Register Version</button>
+          </div>
+        </form>
+      </div>
+    </dialog>
+
+    <!-- INGESTION WIZARD PREVIEW OVERLAY -->
+    <div class="wizard-overlay" id="wizard-container" style="display: none;">
+      <div class="wizard-modal glass-card">
+        <div class="wizard-header">
+          <h3>Log Ingestion Wizard Preview</h3>
+          <button class="wizard-close-btn" onclick="document.getElementById('wizard-container').style.display = 'none'">✕</button>
+        </div>
+        <div class="wizard-body">
+          <div class="wizard-meta">
+            <div class="meta-item">Format Inferred: <span id="wizard-format" class="badge">JSONL</span></div>
+            <div class="meta-item">Total Lines: <span id="wizard-lines">0</span></div>
+          </div>
+          <h4>Sample Inferred Rows (First 10 matches)</h4>
+          <div class="table-container">
+            <table id="wizard-table">
+              <thead>
+                <tr>
+                  <th>Row</th>
+                  <th>Component</th>
+                  <th>Level</th>
+                  <th>Message / Content Preview</th>
+                </tr>
+              </thead>
+              <tbody id="wizard-tbody">
+                <!-- Dynamically populated preview rows -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="wizard-footer">
+          <button class="btn-cancel" onclick="document.getElementById('wizard-container').style.display = 'none'">Cancel</button>
+          <button class="action-btn" id="wizard-confirm-btn">Execute Full Ingestion</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION CONTAINER -->
+    <div class="toast-container" id="toast-root"></div>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
