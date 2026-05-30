@@ -193,6 +193,4 @@ Application logs are written to `logs/` with tagged prefixes for easy filtering:
 
 ## Links
 
-- [GEPA — Genetic Evolutionary Prompt Algorithm](https://arxiv.org/abs/2309.03409)
-- [google-genai SDK](https://github.com/googleapis/python-genai)
-- [Model Context Protocol (MCP)](https://modelcontextprotocol.io)
+- [GEPA — Genetic Evolutionary Prompt Algorithm](https://gepa-ai.github.io/gepa/)
